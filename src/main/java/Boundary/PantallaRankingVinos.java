@@ -258,10 +258,7 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void botonGenerarRankingBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGenerarRankingBtnActionPerformed
-        habilitarPantalla();
-        gestor.opGenerarRankingDeVinos(PantallaRankingVinos.this);
-    }//GEN-LAST:event_botonGenerarRankingBtnActionPerformed
+
 
     private void cmbTipoReseñaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoReseñaActionPerformed
 
@@ -360,9 +357,6 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 int opcion = JOptionPane.showConfirmDialog(PantallaRankingVinos.this, "¿Estás seguro que quieres generar el reporte?", "Confirmación", JOptionPane.YES_NO_OPTION);
                 if (opcion == JOptionPane.YES_OPTION) {
-                    confirmacionGeneracionReporte = tomarConfPGReporte();
-
-                    //Se instancian los objetos necesarios para poder continuar con el CU:
 
                     ObjectMapper mapper = new ObjectMapper();
                     mapper.registerModule(new JavaTimeModule());
@@ -376,7 +370,7 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
                         listaVinos = mapper.readValue(new File(jsonVinos), new TypeReference<List<Vino>>() {});
                         listapaises = mapper.readValue(new File(jsonPaises), new TypeReference<List<Pais>>() {});
 
-                        gestor.tomarConfPGReporte(confirmacionGeneracionReporte, listaVinos, listapaises,PantallaRankingVinos.this , interfazExcel);
+                        tomarConfPGReporte(listaVinos, listapaises, interfazExcel);
 
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
@@ -417,6 +411,11 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
 
 
     //METODOS CASO DE USO
+
+    private void botonGenerarRankingBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGenerarRankingBtnActionPerformed
+        habilitarPantalla();
+        gestor.opGenerarRankingDeVinos(PantallaRankingVinos.this);
+    }//GEN-LAST:event_botonGenerarRankingBtnActionPerformed
 
     public void habilitarPantalla(){
         botonGenerarRankingBtn.setVisible(false);
@@ -488,16 +487,6 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
         cmbTipoReseña.setEnabled(true);
     }
     
-    
-    public void tomarFormaDeVisualizacion() {
-        formasVisualizacionReporte = (String) cmbTipoVisualizacion.getSelectedItem();
-        if (formasVisualizacionReporte != null && "Excel".equals(formasVisualizacionReporte)) {
-            gestor.tomarFormaDeVisualiz(formasVisualizacionReporte, PantallaRankingVinos.this);
-        } else {
-            JOptionPane.showMessageDialog(this, "¡Estamos trabajando! ¡Muy pronto vas a poder seleccionar ese tipo de reseñas!");
-        }
-    }
-    
     public void tomarTipoResena(){
         tipoResenaSeleccionada = (String) cmbTipoReseña.getSelectedItem();
         if (tipoResenaSeleccionada != null && "Reseñas de Sommelier".equals(tipoResenaSeleccionada)) {
@@ -513,12 +502,23 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
         cmbTipoVisualizacion.setEnabled(true);
     }
 
+    public void tomarFormaDeVisualizacion() {
+        formasVisualizacionReporte = (String) cmbTipoVisualizacion.getSelectedItem();
+        if (formasVisualizacionReporte != null && "Excel".equals(formasVisualizacionReporte)) {
+            gestor.tomarFormaDeVisualiz(formasVisualizacionReporte, PantallaRankingVinos.this);
+        } else {
+            JOptionPane.showMessageDialog(this, "¡Estamos trabajando! ¡Muy pronto vas a poder seleccionar ese tipo de reseñas!");
+        }
+    }
+
     public void solicitarConfPGReporte(){
         botonConfirmacionBtn.setEnabled(true);
     }
     
-    public boolean tomarConfPGReporte(){
-         return true;
+    public void tomarConfPGReporte(List<Vino> listaVinos, List<Pais> listapaises, InterfazExcel interfazExcel) throws WriteException, IOException {
+        confirmacionGeneracionReporte = true;
+
+        gestor.tomarConfPGReporte(confirmacionGeneracionReporte, listaVinos, listapaises,PantallaRankingVinos.this , interfazExcel);
     }
 
     public void informarGeneracionExitosa(String informeFinal){
