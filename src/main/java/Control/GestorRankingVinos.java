@@ -4,12 +4,11 @@ import Boundary.InterfazExcel;
 import Boundary.PantallaRankingVinos;
 import Entity.Pais;
 import Entity.Vino;
-//import jxl.Workbook;
-//import jxl.write.Label;
-//import jxl.write.WritableSheet;
-//import jxl.write.WritableWorkbook;
-//import jxl.write.WriteException;
-
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -105,10 +104,10 @@ public class GestorRankingVinos {
         setTipoVisualizacionReporteSeleccionado(formaVisualizacion);
         pantalla.solicitarConfPGReporte();
     }
-    /*public void tomarConfPGReporte(boolean confirmacion, List<Vino> vinos, List<Pais> listaPaises, InterfazExcel interfazExcel) throws IOException, WriteException {
+    public void tomarConfPGReporte(boolean confirmacion, List<Vino> vinos, List<Pais> listaPaises, PantallaRankingVinos pantalla, InterfazExcel interfazExcel) throws IOException, WriteException {
         setConfirmacionReporte(confirmacion);
         if(tipoResenaSeleccionada.equals("Reseñas de Sommelier")){
-            buscarVinosConResenasSommeliers(vinos, listaPaises, interfazExcel);
+            buscarVinosConResenasSommeliers(vinos, listaPaises, pantalla, interfazExcel);
         } else if(tipoResenaSeleccionada.equals("Reseñas normales")){
             //Fuera del CU
         } else if(tipoResenaSeleccionada.equals("Reseñas de Amigos")){
@@ -116,7 +115,7 @@ public class GestorRankingVinos {
         }
 
     }
-    public void buscarVinosConResenasSommeliers(List<Vino> vinos, List<Pais> listaPaises, InterfazExcel interfazExcel) throws IOException, WriteException {
+    public void buscarVinosConResenasSommeliers(List<Vino> vinos, List<Pais> listaPaises, PantallaRankingVinos pantalla, InterfazExcel interfazExcel) throws IOException, WriteException {
 
         listaVinosConSommelier = new ArrayList<>();
 
@@ -130,14 +129,14 @@ public class GestorRankingVinos {
             vino.calcularPromedioCalif(fechaDesde,fechaHasta);
         });
 
-        ordenarVinosSegunCalificación(listaPaises, interfazExcel);
+        ordenarVinosSegunCalificación(listaPaises,pantalla, interfazExcel);
     }
-    public void ordenarVinosSegunCalificación(List<Pais> listaPaises, InterfazExcel interfazExcel) throws IOException, WriteException {
+    public void ordenarVinosSegunCalificación(List<Pais> listaPaises, PantallaRankingVinos pantalla, InterfazExcel interfazExcel) throws IOException, WriteException {
         listaVinosConSommelier.sort(Comparator.comparing(Vino::getPromedioCalificacion).reversed());
-        obtenerDatosTop10(listaPaises, interfazExcel);
+        obtenerDatosTop10(listaPaises, pantalla, interfazExcel);
     }
 
-    public void obtenerDatosTop10(List<Pais> listaPaises, InterfazExcel interfazExcel) throws IOException, WriteException { //ESTE METODO NO ESTÁ EN EL DIAGRAMA DE SECUENCIA, SE LLAMA ARRIBA
+    public void obtenerDatosTop10(List<Pais> listaPaises, PantallaRankingVinos pantalla, InterfazExcel interfazExcel) throws IOException, WriteException { //ESTE METODO NO ESTÁ EN EL DIAGRAMA DE SECUENCIA, SE LLAMA ARRIBA
 
         int cantidadVinos = listaVinosConSommelier.size() > 10 ? 10 : listaVinosConSommelier.size();
 
@@ -160,17 +159,18 @@ public class GestorRankingVinos {
             listaTopDiezVinos[posicionGeneral-1][6]=vino.obtenerNombreRegionVitinicola();
             listaTopDiezVinos[posicionGeneral-1][7]=vino.obtenerUbicacion(listaPaises);
         }
-        generarArchivoExcel(interfazExcel);
+        generarArchivoExcel(pantalla, interfazExcel);
 
     }
 
     public int obtenerCalificacionGeneral(int posicionGeneral) {
         return posicionGeneral + 1;
     }
-    public void generarArchivoExcel(InterfazExcel interfazExcel) throws IOException, WriteException {
+    public void generarArchivoExcel(PantallaRankingVinos pantalla, InterfazExcel interfazExcel) throws IOException, WriteException {
         String nombreArchivo = "C:\\Users\\Usuario\\Downloads\\Ranking de Vinos.xls";
-        WritableWorkbook  workbook = Workbook.createWorkbook(new File(nombreArchivo));
+        WritableWorkbook workbook = Workbook.createWorkbook(new File(nombreArchivo));
         WritableSheet sheet = workbook.createSheet("Ranking",0);
+        Integer cantidadVinosExport = null;
 
         sheet.addCell(new Label(0,0,"Posición general"));
         sheet.addCell(new Label(1,0,"Nombre Vino"));
@@ -181,24 +181,31 @@ public class GestorRankingVinos {
         sheet.addCell(new Label(6,0,"Nombre Región Vitivinicola"));
         sheet.addCell(new Label(7,0,"Pais"));
 
-        for (int i = 1; i <= listaTopDiezVinos.length; i++) {
+        if(listaTopDiezVinos != null){
+            cantidadVinosExport = listaTopDiezVinos.length;
+            for (int i = 1; i <= cantidadVinosExport; i++) {
 
-            sheet.addCell(new Label(0,i,listaTopDiezVinos[i-1][0]));
-            sheet.addCell(new Label(1,i,listaTopDiezVinos[i-1][1]));
-            sheet.addCell(new Label(2,i,listaTopDiezVinos[i-1][2]));
-            sheet.addCell(new Label(3,i,listaTopDiezVinos[i-1][3]));
-            sheet.addCell(new Label(4,i,listaTopDiezVinos[i-1][4]));
-            sheet.addCell(new Label(5,i,listaTopDiezVinos[i-1][5]));
-            sheet.addCell(new Label(6,i,listaTopDiezVinos[i-1][6]));
-            sheet.addCell(new Label(7,i,listaTopDiezVinos[i-1][7]));
+                sheet.addCell(new Label(0,i,listaTopDiezVinos[i-1][0]));
+                sheet.addCell(new Label(1,i,listaTopDiezVinos[i-1][1]));
+                sheet.addCell(new Label(2,i,listaTopDiezVinos[i-1][2]));
+                sheet.addCell(new Label(3,i,listaTopDiezVinos[i-1][3]));
+                sheet.addCell(new Label(4,i,listaTopDiezVinos[i-1][4]));
+                sheet.addCell(new Label(5,i,listaTopDiezVinos[i-1][5]));
+                sheet.addCell(new Label(6,i,listaTopDiezVinos[i-1][6]));
+                sheet.addCell(new Label(7,i,listaTopDiezVinos[i-1][7]));
+            }
         }
+
         workbook.write();
         workbook.close();
 
-        interfazExcel.exportarExcel();
+        String informe = interfazExcel.exportarExcel(cantidadVinosExport);
+
+        pantalla.informarGeneracionExitosa(informe);
+
     }
     public void finCU() {
         System.out.println("Fin del CU");
-    }*/
+    }
 
 }

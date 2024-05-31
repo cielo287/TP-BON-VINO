@@ -3,6 +3,15 @@ package Boundary;
 
 
 import Control.GestorRankingVinos;
+import Entity.Pais;
+import Entity.Vino;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jxl.write.WriteException;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -14,10 +23,11 @@ import java.time.ZoneId;
 import javax.swing.JOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class PantallaRankingVinos extends javax.swing.JFrame {
     private GestorRankingVinos gestor;
-    private Date fechaActual;
+    //private Date fechaActual;
     private LocalDate fechaDesdeTxt;
     private LocalDate fechaHastaTxt;
     private boolean cambioFechaPorValidacion = false;
@@ -28,8 +38,8 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
 
     public PantallaRankingVinos() {
         initComponents();
-        fechaActual = new Date();
-        fechaMaxima(fechaActual);
+        //fechaActual = ;
+        fechaMaxima(new Date());
         cmbTipoReseña.setSelectedIndex(-1);
         cmbTipoVisualizacion.setSelectedIndex(-1);
         ocultarCampos();
@@ -414,36 +424,54 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
         }
     });
     
-    /*botonConfirmacionBtn.addActionListener(new ActionListener() {
+    botonConfirmacionBtn.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             int opcion = JOptionPane.showConfirmDialog(PantallaRankingVinos.this, "¿Estás seguro que quieres generar el reporte?", "Confirmación", JOptionPane.YES_NO_OPTION);
             if (opcion == JOptionPane.YES_OPTION) {
                 confirmacionGeneracionReporte = tomarConfPGReporte();
-                gestor.tomarConfPGReportetomarConfPGReporte(confirmacionGeneracion, listaVinos, listapaises, interfazExcel);;
-                // Puedes hacer algo con la confirmación, si lo necesitas.
+
+                //Se instancian los objetos necesarios para poder continuar con el CU:
+
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.registerModule(new JavaTimeModule());
+                String projectDir = System.getProperty("user.dir");
+                String jsonVinos = projectDir + File.separator + "src/main/java/JSON/vinos.json";
+                String jsonPaises = projectDir + File.separator + "src/main/java/JSON/paises.json";
+                InterfazExcel interfazExcel = new InterfazExcel();
+                List<Vino> listaVinos = null;
+                List<Pais> listapaises = null;
+                try {
+                    listaVinos = mapper.readValue(new File(jsonVinos), new TypeReference<List<Vino>>() {});
+                    listapaises = mapper.readValue(new File(jsonPaises), new TypeReference<List<Pais>>() {});
+
+                    gestor.tomarConfPGReporte(confirmacionGeneracionReporte, listaVinos, listapaises,PantallaRankingVinos.this , interfazExcel);
+
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                } catch (WriteException ex) {
+                    throw new RuntimeException(ex);
+                }
+
             }
         }
-    });*/
+    });
                 
     }
     
     public void solicitarTipoResena(){
         lblTipoReseña.setEnabled(true);
         cmbTipoReseña.setEnabled(true);
-        
-
     }
     
     
     public void tomarFormaDeVisualizacion() {
-    formasVisualizacionReporte = (String) cmbTipoVisualizacion.getSelectedItem();
-    if (formasVisualizacionReporte != null && "Excel".equals(formasVisualizacionReporte)) {
-        gestor.tomarFormaDeVisualiz(formasVisualizacionReporte, PantallaRankingVinos.this);
-    } else {
-        JOptionPane.showMessageDialog(this, "¡Estamos trabajando! ¡Muy pronto vas a poder seleccionar ese tipo de reseñas!");
-    }       
-        
+        formasVisualizacionReporte = (String) cmbTipoVisualizacion.getSelectedItem();
+        if (formasVisualizacionReporte != null && "Excel".equals(formasVisualizacionReporte)) {
+            gestor.tomarFormaDeVisualiz(formasVisualizacionReporte, PantallaRankingVinos.this);
+        } else {
+            JOptionPane.showMessageDialog(this, "¡Estamos trabajando! ¡Muy pronto vas a poder seleccionar ese tipo de reseñas!");
+        }
     }
     
     public void tomarTipoResena(){
@@ -459,19 +487,19 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
     public void mostrarFormasDeVisualizPSeleccion() {
         lblTipoVisualizacion.setEnabled(true);
         cmbTipoVisualizacion.setEnabled(true);
-    
     }
-    
 
-    
     public void solicitarConfPGReporte(){
         botonConfirmacionBtn.setEnabled(true);
-    
     }
     
     public boolean tomarConfPGReporte(){
          return true;
-         
+    }
+
+    public void informarGeneracionExitosa(String informeFinal){
+        //CONFIRMACION
+        System.out.println(informeFinal);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
