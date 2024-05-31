@@ -167,7 +167,10 @@ public class GestorRankingVinos {
         return posicionGeneral + 1;
     }
     public void generarArchivoExcel(PantallaRankingVinos pantalla, InterfazExcel interfazExcel) throws IOException, WriteException {
-        String nombreArchivo = "C:\\Users\\Usuario\\Downloads\\Ranking de Vinos.xls";
+        //String nombreArchivo = "C:\\Users\\Usuario\\Downloads\\Ranking de Vinos.xls";
+        String userHome = System.getProperty("user.home");
+        String downloadDir = userHome + File.separator + "Downloads";
+        String nombreArchivo = downloadDir + File.separator + "Ranking de Vinos.xls";
         WritableWorkbook workbook = Workbook.createWorkbook(new File(nombreArchivo));
         WritableSheet sheet = workbook.createSheet("Ranking",0);
         Integer cantidadVinosExport = null;
