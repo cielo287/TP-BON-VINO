@@ -17,6 +17,8 @@ import java.util.List;
 import java.io.IOException;
 
 public class GestorRankingVinos {
+
+    //ATRIBUTOS
     private LocalDate fechaDesde;
     private LocalDate fechaHasta;
     private String tipoResenaSeleccionada;
@@ -25,7 +27,7 @@ public class GestorRankingVinos {
     private List<Vino> listaVinosConSommelier;
     private String[][] listaTopDiezVinos;
 
-    //GETTER AND SETTER
+    //GETTER Y SETTER
     public LocalDate getFechaDesde() {
         return fechaDesde;
     }
@@ -208,7 +210,7 @@ public class GestorRankingVinos {
 
     }
     public void finCU() {
-        System.out.println("Fin del CU");
+        System.out.println("Fin del Caso de Uso");
         System.exit(0);
     }
 

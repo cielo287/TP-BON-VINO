@@ -4,8 +4,12 @@ package Entity;
 import java.util.List;
 
 public class RegionVitivinicola {
+
+    //ATRIBUTOS
     private String descripcion;
     private String nombre;
+
+    //GETTERS Y SETTERS
 
     public String getDescripcion() {
         return descripcion;
@@ -23,6 +27,7 @@ public class RegionVitivinicola {
         this.nombre = nombre;
     }
 
+    //OTROS METODOS
     public String obtenerNombrePais(List<Pais> paises){
         for (Pais pais: paises) {
             for (Provincia provincia: pais.getProvincias()) {

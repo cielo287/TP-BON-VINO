@@ -5,12 +5,13 @@ package Entity;
 import java.time.LocalDate;
 
 public class Resena {
+    //ATRIBUTOS
     private String comentario;
     private boolean esPremium;
     private LocalDate fechaResena;
     private Double puntaje;
 
-
+    //GETTERS Y SETTERS
     public String getComentario() {
         return comentario;
     }
@@ -43,6 +44,7 @@ public class Resena {
         this.fechaResena = fechaResena;
     }
 
+    //OTROS METODOS
      public boolean esDePeriodo(LocalDate fechaDesde, LocalDate fechaHasta){
         return (this.fechaResena.isAfter(fechaDesde) && this.fechaResena.isBefore(fechaHasta));
     }

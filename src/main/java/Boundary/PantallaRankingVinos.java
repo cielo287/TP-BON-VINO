@@ -13,11 +13,8 @@ import jxl.write.WriteException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Date;
-import java.text.SimpleDateFormat;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import javax.swing.JOptionPane;
@@ -26,8 +23,9 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class PantallaRankingVinos extends javax.swing.JFrame {
+
+    //ATRIBUTOS
     private GestorRankingVinos gestor;
-    //private Date fechaActual;
     private LocalDate fechaDesdeTxt;
     private LocalDate fechaHastaTxt;
     private boolean cambioFechaPorValidacion = false;
@@ -35,11 +33,30 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
     private String formasVisualizacionReporte;
     private boolean confirmacionGeneracionReporte;
 
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botonConfirmacionBtn;
+    private javax.swing.JButton botonGenerarRankingBtn;
+    private javax.swing.JButton btnImportarActualizacionVinos1;
+    private javax.swing.JButton btnVolver;
+    private javax.swing.JComboBox<String> cmbTipoReseña;
+    private javax.swing.JComboBox<String> cmbTipoVisualizacion;
+    private com.toedter.calendar.JDateChooser dateChooseDesde;
+    private com.toedter.calendar.JDateChooser dateChooseHasta;
+    private javax.swing.JLabel fechaDesdeLbl;
+    private javax.swing.JLabel fechaHastaLbl;
+    private javax.swing.JLabel fechaHastaLbl2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanelPrincipal;
+    private javax.swing.JLabel lblBonVino;
+    private javax.swing.JLabel lblTipoReseña;
+    private javax.swing.JLabel lblTipoVisualizacion;
+    // End of variables declaration//GEN-END:variables
 
+
+    // CONSTRUCTOR
     public PantallaRankingVinos() {
         initComponents();
         this.setLocationRelativeTo(null);
-        //fechaActual = ;
         fechaMaxima(new Date());
         cmbTipoReseña.setSelectedIndex(-1);
         cmbTipoVisualizacion.setSelectedIndex(-1);
@@ -50,6 +67,7 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
         inicializarListeners();
     }
 
+    //CONFIGURACION FORMULARIO
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -291,12 +309,92 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
             }
         });
     }
-    
-        public void fechaMaxima(Date fechaActual) {
+
+    public void inicializarListeners() {
+        dateChooseDesde.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (!cambioFechaPorValidacion && "date".equals(evt.getPropertyName())) {
+                    tomarFechaDesde();
+                    fechaHastaLbl.setEnabled(true);
+                    dateChooseHasta.setEnabled(true);
+                }
+            }
+        });
+
+        dateChooseHasta.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (!cambioFechaPorValidacion && "date".equals(evt.getPropertyName())) {
+                    tomarFechaHasta();
+
+                    if (!validarFechas(fechaDesdeTxt, fechaHastaTxt)){
+                        fechaDesdeTxt = null;
+                        fechaHastaTxt = null;
+                        fechaHastaLbl.setEnabled(false);
+                        dateChooseHasta.setEnabled(false);
+                    } else {
+                        gestor.tomarFechasDesdeHasta(fechaDesdeTxt, fechaHastaTxt, PantallaRankingVinos.this);
+                    }
+                }
+            }
+        });
+
+        // Listener para cmbTipoReseña
+        cmbTipoReseña.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tomarTipoResena();
+            }
+        });
+
+        cmbTipoVisualizacion.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tomarFormaDeVisualizacion();
+            }
+        });
+
+        botonConfirmacionBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int opcion = JOptionPane.showConfirmDialog(PantallaRankingVinos.this, "¿Estás seguro que quieres generar el reporte?", "Confirmación", JOptionPane.YES_NO_OPTION);
+                if (opcion == JOptionPane.YES_OPTION) {
+                    confirmacionGeneracionReporte = tomarConfPGReporte();
+
+                    //Se instancian los objetos necesarios para poder continuar con el CU:
+
+                    ObjectMapper mapper = new ObjectMapper();
+                    mapper.registerModule(new JavaTimeModule());
+                    String projectDir = System.getProperty("user.dir");
+                    String jsonVinos = projectDir + File.separator + "src/main/java/JSON/vinos.json";
+                    String jsonPaises = projectDir + File.separator + "src/main/java/JSON/paises.json";
+                    InterfazExcel interfazExcel = new InterfazExcel();
+                    List<Vino> listaVinos = null;
+                    List<Pais> listapaises = null;
+                    try {
+                        listaVinos = mapper.readValue(new File(jsonVinos), new TypeReference<List<Vino>>() {});
+                        listapaises = mapper.readValue(new File(jsonPaises), new TypeReference<List<Pais>>() {});
+
+                        gestor.tomarConfPGReporte(confirmacionGeneracionReporte, listaVinos, listapaises,PantallaRankingVinos.this , interfazExcel);
+
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (WriteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                }
+            }
+        });
+
+    }
+
+
+    public void fechaMaxima(Date fechaActual) {
         dateChooseDesde.setMaxSelectableDate(fechaActual);
         dateChooseHasta.setMaxSelectableDate(fechaActual);
     }
-        
     
     public void ocultarCampos() {
         
@@ -315,6 +413,11 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
         botonConfirmacionBtn.setVisible(false); 
         btnVolver.setVisible(false);
     }
+
+
+
+    //METODOS CASO DE USO
+
     public void habilitarPantalla(){
         botonGenerarRankingBtn.setVisible(false);
         lblBonVino.setVisible(true); 
@@ -380,90 +483,6 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
     }
    }
     
-    public void inicializarListeners() {
-    dateChooseDesde.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (!cambioFechaPorValidacion && "date".equals(evt.getPropertyName())) {
-                tomarFechaDesde();
-                fechaHastaLbl.setEnabled(true);
-                dateChooseHasta.setEnabled(true);
-            /*if (!validarFechas(fechaDesdeTxt, fechaHastaTxt)){
-                fechaDesdeTxt = null;
-                fechaHastaTxt = null;
-            }*/
-            }
-        }
-    });
-
-    dateChooseHasta.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (!cambioFechaPorValidacion && "date".equals(evt.getPropertyName())) {
-                tomarFechaHasta();
-
-            if (!validarFechas(fechaDesdeTxt, fechaHastaTxt)){
-                fechaDesdeTxt = null;
-                fechaHastaTxt = null;
-                fechaHastaLbl.setEnabled(false);
-                dateChooseHasta.setEnabled(false);
-            } else {
-                gestor.tomarFechasDesdeHasta(fechaDesdeTxt, fechaHastaTxt, PantallaRankingVinos.this);
-            }
-            }
-        }
-    });
-    
-    // Listener para cmbTipoReseña
-    cmbTipoReseña.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            tomarTipoResena();
-        }
-    });
-    
-    cmbTipoVisualizacion.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            tomarFormaDeVisualizacion();
-        }
-    });
-    
-    botonConfirmacionBtn.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            int opcion = JOptionPane.showConfirmDialog(PantallaRankingVinos.this, "¿Estás seguro que quieres generar el reporte?", "Confirmación", JOptionPane.YES_NO_OPTION);
-            if (opcion == JOptionPane.YES_OPTION) {
-                confirmacionGeneracionReporte = tomarConfPGReporte();
-
-                //Se instancian los objetos necesarios para poder continuar con el CU:
-
-                ObjectMapper mapper = new ObjectMapper();
-                mapper.registerModule(new JavaTimeModule());
-                String projectDir = System.getProperty("user.dir");
-                String jsonVinos = projectDir + File.separator + "src/main/java/JSON/vinos.json";
-                String jsonPaises = projectDir + File.separator + "src/main/java/JSON/paises.json";
-                InterfazExcel interfazExcel = new InterfazExcel();
-                List<Vino> listaVinos = null;
-                List<Pais> listapaises = null;
-                try {
-                    listaVinos = mapper.readValue(new File(jsonVinos), new TypeReference<List<Vino>>() {});
-                    listapaises = mapper.readValue(new File(jsonPaises), new TypeReference<List<Pais>>() {});
-
-                    gestor.tomarConfPGReporte(confirmacionGeneracionReporte, listaVinos, listapaises,PantallaRankingVinos.this , interfazExcel);
-
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                } catch (WriteException ex) {
-                    throw new RuntimeException(ex);
-                }
-
-            }
-        }
-    });
-                
-    }
-    
     public void solicitarTipoResena(){
         lblTipoReseña.setEnabled(true);
         cmbTipoReseña.setEnabled(true);
@@ -503,29 +522,7 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
     }
 
     public void informarGeneracionExitosa(String informeFinal){
-        //CONFIRMACION
-        //System.out.println(informeFinal);
-        JOptionPane.showMessageDialog(this, "¡Excel generado con éxito! Buscalo en tu carpeta de descargas y conocé cuales son los mejores vinos.");
-        //Cuando ponga el ok en el cartl, hay que ejecutar el FinCU()
+        JOptionPane.showMessageDialog(this, informeFinal);
         gestor.finCU();
     }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botonConfirmacionBtn;
-    private javax.swing.JButton botonGenerarRankingBtn;
-    private javax.swing.JButton btnImportarActualizacionVinos1;
-    private javax.swing.JButton btnVolver;
-    private javax.swing.JComboBox<String> cmbTipoReseña;
-    private javax.swing.JComboBox<String> cmbTipoVisualizacion;
-    private com.toedter.calendar.JDateChooser dateChooseDesde;
-    private com.toedter.calendar.JDateChooser dateChooseHasta;
-    private javax.swing.JLabel fechaDesdeLbl;
-    private javax.swing.JLabel fechaHastaLbl;
-    private javax.swing.JLabel fechaHastaLbl2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanelPrincipal;
-    private javax.swing.JLabel lblBonVino;
-    private javax.swing.JLabel lblTipoReseña;
-    private javax.swing.JLabel lblTipoVisualizacion;
-    // End of variables declaration//GEN-END:variables
 }

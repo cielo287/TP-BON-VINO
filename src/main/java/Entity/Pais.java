@@ -9,7 +9,7 @@ public class Pais {
     private String nombre;
     private List<Provincia> provincias;
 
-    //GETTER AND SETTERS
+    //GETTER Y SETTERS
 
     public String getNombre() {
         return nombre;

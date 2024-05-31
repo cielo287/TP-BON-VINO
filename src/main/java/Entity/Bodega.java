@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class Bodega {
+
+    //ATRIBUTOS
     private String coordenadasUbicacion;
     private  String descripcion;
     private String historia;
@@ -12,6 +14,7 @@ public class Bodega {
     private LocalDate periodoActualizacion;
     private RegionVitivinicola regionVitivinicola;
 
+    //GETTERS Y SETTERS
     public String getCoordenadasUbicacion() {
         return coordenadasUbicacion;
     }
@@ -60,6 +63,7 @@ public class Bodega {
         this.regionVitivinicola = regionVitivinicola;
     }
 
+    //OTROS METODOS
     public String obtenerNombreRegionVitivinicola(){
 
         return this.regionVitivinicola.getNombre();

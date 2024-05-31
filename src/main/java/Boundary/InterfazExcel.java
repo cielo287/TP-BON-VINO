@@ -5,9 +5,9 @@ package Boundary;
 public class InterfazExcel {
     public String exportarExcel( Integer cantidadVinos) {
         if(cantidadVinos == null){
-            return "No se obtuvieron resultados para las fechas seleccionadas.";
+            return "El excel fue generado vacío ya que no hay vinos para las fechas solicitadas :/ ¡inténtalo de nuevo!";
         } else {
-            return "Se guardó el Excel del Ranking solicitado en C:\\Users\\Usuario\\Downloads";
+            return "¡Excel generado con éxito! Buscalo en tu carpeta de descargas y conocé cuales son los mejores vinos.";
         }
 
     }

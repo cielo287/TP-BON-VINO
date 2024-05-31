@@ -20,7 +20,7 @@ public class Vino {
 
     private List<Resena> resenasPremiumPeriodo;
 
-    //GETTERS AND SETTERS
+    //GETTERS Y SETTERS
 
     public Integer getAnada() {
         return anada;
@@ -95,8 +95,6 @@ public class Vino {
     }
 
     //CONSTRUCTOR
-
-
     public Vino() {
     }
 

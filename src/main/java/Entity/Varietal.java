@@ -2,9 +2,12 @@
 package Entity;
 
 public class Varietal {
+
+    //ATRIBUTOS
     private String descripcion;
     private double porcentajeComposicion;
 
+    //GETTERS Y SETTERS
     public String getDescripcion() {
         return descripcion;
     }
