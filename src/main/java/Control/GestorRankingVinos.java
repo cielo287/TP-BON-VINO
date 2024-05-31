@@ -206,6 +206,7 @@ public class GestorRankingVinos {
     }
     public void finCU() {
         System.out.println("Fin del CU");
+        System.exit(0);
     }
 
 }

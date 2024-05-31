@@ -500,6 +500,9 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
     public void informarGeneracionExitosa(String informeFinal){
         //CONFIRMACION
         System.out.println(informeFinal);
+
+        //Cuando ponga el ok en el cartl, hay que ejecutar el FinCU()
+        gestor.finCU();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
