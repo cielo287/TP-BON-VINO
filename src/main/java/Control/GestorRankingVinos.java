@@ -4,6 +4,10 @@ import Boundary.InterfazExcel;
 import Boundary.PantallaRankingVinos;
 import Entity.Pais;
 import Entity.Vino;
+import Strategy.EstrategiaAmigos;
+import Strategy.EstrategiaNormales;
+import Strategy.EstrategiaSommelier;
+import Strategy.IEstrategiaReporte;
 import jxl.Workbook;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
@@ -11,8 +15,6 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import java.io.File;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.io.IOException;
 
@@ -24,8 +26,8 @@ public class GestorRankingVinos {
     private String tipoResenaSeleccionada;
     private String tipoVisualizacionReporteSeleccionado;
     private Boolean confirmacionReporte;
-    private List<Vino> listaVinosConSommelier;
-    private String[][] listaTopDiezVinos;
+    private String[][] reporte;
+    private IEstrategiaReporte estrategiaReporte;
 
     //GETTER Y SETTER
     public LocalDate getFechaDesde() {
@@ -69,20 +71,20 @@ public class GestorRankingVinos {
         this.confirmacionReporte = confirmacionReporte;
     }
 
-    public List<Vino> getListaVinosConSommelier() {
-        return listaVinosConSommelier;
+    public String[][] getReporte() {
+        return reporte;
     }
 
-    public void setListaVinosConSommelier(List<Vino> listaVinosConSommelier) {
-        this.listaVinosConSommelier = listaVinosConSommelier;
+    public void setReporte(String[][] reporte) {
+        this.reporte = reporte;
     }
 
-    public String[][] getListaTopDiezVinos() {
-        return listaTopDiezVinos;
+    public IEstrategiaReporte getEstrategiaReporte() {
+        return estrategiaReporte;
     }
 
-    public void setListaTopDiezVinos(String[][] listaTopDiezVinos) {
-        this.listaTopDiezVinos = listaTopDiezVinos;
+    public void setEstrategiaReporte(IEstrategiaReporte estrategiaReporte) {
+        this.estrategiaReporte = estrategiaReporte;
     }
 
     //CONSTRUCTOR
@@ -91,85 +93,63 @@ public class GestorRankingVinos {
 
     //OTROS METODOS
     public void opGenerarRankingDeVinos(PantallaRankingVinos pantalla) {
+        //Se pide a la pantalla que solicite las fechas desde y hasta para sacar el reporte.
         pantalla.solicitarFechaDesdeYHasta();
     }
     public void tomarFechasDesdeHasta(LocalDate fechaDesde, LocalDate fechaHasta, PantallaRankingVinos pantalla) {
+        //El gestor setea las correspondientes fechas.
         setFechaDesde(fechaDesde);
         setFechaHasta(fechaHasta);
+
+        //Luego la pantalla pasa a solicitar el tipo de reseña.
         pantalla.solicitarTipoResena();
     }
     public void tomarTipoResena(String tipoResena, PantallaRankingVinos pantalla) {
+        //El gestor setea el tipo de reseña.
         setTipoResenaSeleccionada(tipoResena);
+
+        //Luego la pantalla pasa a solicitar la forma de visualización.
         pantalla.mostrarFormasDeVisualizPSeleccion();
     }
     public void tomarFormaDeVisualiz(String formaVisualizacion, PantallaRankingVinos pantalla) {
+        //El gestor setea el tipo de reporte seleccionado.
         setTipoVisualizacionReporteSeleccionado(formaVisualizacion);
+
+        //Luego la pantalla pasa a solicitar la confirmación del reporte.
         pantalla.solicitarConfPGReporte();
     }
     public void tomarConfPGReporte(boolean confirmacion, List<Vino> vinos, List<Pais> listaPaises, PantallaRankingVinos pantalla, InterfazExcel interfazExcel) throws IOException, WriteException {
+        //El gestor setea la confirmación del reporte.
         setConfirmacionReporte(confirmacion);
+
+        //Se crea la estrategia dependiendo del tipo de reseña seleccionada.
+        IEstrategiaReporte strategy = crearEstrategia(tipoResenaSeleccionada);
+
+        //Se llama a la estategia correspondiente para que genere el reporte solicitado.
+        reporte = strategy.generarRanking(vinos,listaPaises,fechaDesde,fechaHasta);
+
+        //Se procede a generar el archivo de Excel.
+        generarArchivoExcel(pantalla,interfazExcel);
+    }
+
+    private IEstrategiaReporte crearEstrategia(String tipoResenaSeleccionada) {
+        //Se crea la estrategia según el tipo de reseña seleccionada.
+        IEstrategiaReporte strategy;
+
         if(tipoResenaSeleccionada.equals("Reseñas de Sommelier")){
-            buscarVinosConResenasSommeliers(vinos, listaPaises, pantalla, interfazExcel);
+            strategy = new EstrategiaSommelier();
         } else if(tipoResenaSeleccionada.equals("Reseñas normales")){
-            //Fuera del CU
+            strategy = new EstrategiaNormales();
         } else if(tipoResenaSeleccionada.equals("Reseñas de Amigos")){
-            //Fuera del CU
+            strategy = new EstrategiaAmigos();
+        } else {
+            return null;
         }
 
-    }
-    public void buscarVinosConResenasSommeliers(List<Vino> vinos, List<Pais> listaPaises, PantallaRankingVinos pantalla, InterfazExcel interfazExcel) throws IOException, WriteException {
-
-        listaVinosConSommelier = new ArrayList<>();
-
-        vinos.stream().forEach(vino ->{
-            if(vino.tieneResena(fechaDesde,fechaHasta)){
-                listaVinosConSommelier.add(vino);
-            }
-        });
-
-        listaVinosConSommelier.stream().forEach(vino ->{
-            vino.calcularPromedioCalif(fechaDesde,fechaHasta);
-        });
-
-        ordenarVinosSegunCalificación(listaPaises,pantalla, interfazExcel);
-    }
-    public void ordenarVinosSegunCalificación(List<Pais> listaPaises, PantallaRankingVinos pantalla, InterfazExcel interfazExcel) throws IOException, WriteException {
-        listaVinosConSommelier.sort(Comparator.comparing(Vino::getPromedioCalificacion).reversed());
-        obtenerDatosTop10(listaPaises, pantalla, interfazExcel);
+        return strategy;
     }
 
-    public void obtenerDatosTop10(List<Pais> listaPaises, PantallaRankingVinos pantalla, InterfazExcel interfazExcel) throws IOException, WriteException { //ESTE METODO NO ESTÁ EN EL DIAGRAMA DE SECUENCIA, SE LLAMA ARRIBA
-
-        int cantidadVinos = listaVinosConSommelier.size() > 10 ? 10 : listaVinosConSommelier.size();
-
-        if(cantidadVinos > 0){
-            listaTopDiezVinos = new String[cantidadVinos][8];
-        }
-
-        int posicionGeneral = 0;
-
-        while(posicionGeneral < cantidadVinos){
-            posicionGeneral = obtenerCalificacionGeneral(posicionGeneral);
-            Vino vino = listaVinosConSommelier.get(posicionGeneral-1);
-
-            listaTopDiezVinos[posicionGeneral-1][0]= String.valueOf(posicionGeneral);
-            listaTopDiezVinos[posicionGeneral-1][1]=vino.getNombre();
-            listaTopDiezVinos[posicionGeneral-1][2]=String.valueOf(vino.getPrecio());
-            listaTopDiezVinos[posicionGeneral-1][3]=String.valueOf(vino.getPromedioCalificacion());
-            listaTopDiezVinos[posicionGeneral-1][4]=vino.obtenerNombreBodega();
-            listaTopDiezVinos[posicionGeneral-1][5]=vino.obtenerDescripcionVarietal();
-            listaTopDiezVinos[posicionGeneral-1][6]=vino.obtenerNombreRegionVitinicola();
-            listaTopDiezVinos[posicionGeneral-1][7]=vino.obtenerUbicacion(listaPaises);
-        }
-        generarArchivoExcel(pantalla, interfazExcel);
-
-    }
-
-    public int obtenerCalificacionGeneral(int posicionGeneral) {
-        return posicionGeneral + 1;
-    }
     public void generarArchivoExcel(PantallaRankingVinos pantalla, InterfazExcel interfazExcel) throws IOException, WriteException {
-        //String nombreArchivo = "C:\\Users\\Usuario\\Downloads\\Ranking de Vinos.xls";
         String userHome = System.getProperty("user.home");
         String downloadDir = userHome + File.separator + "Downloads";
         String nombreArchivo = downloadDir + File.separator + "Ranking de Vinos.xls";
@@ -186,18 +166,18 @@ public class GestorRankingVinos {
         sheet.addCell(new Label(6,0,"Nombre Región Vitivinicola"));
         sheet.addCell(new Label(7,0,"Pais"));
 
-        if(listaTopDiezVinos != null){
-            cantidadVinosExport = listaTopDiezVinos.length;
+        if(reporte != null){
+            cantidadVinosExport = reporte.length;
             for (int i = 1; i <= cantidadVinosExport; i++) {
 
-                sheet.addCell(new Label(0,i,listaTopDiezVinos[i-1][0]));
-                sheet.addCell(new Label(1,i,listaTopDiezVinos[i-1][1]));
-                sheet.addCell(new Label(2,i,listaTopDiezVinos[i-1][2]));
-                sheet.addCell(new Label(3,i,listaTopDiezVinos[i-1][3]));
-                sheet.addCell(new Label(4,i,listaTopDiezVinos[i-1][4]));
-                sheet.addCell(new Label(5,i,listaTopDiezVinos[i-1][5]));
-                sheet.addCell(new Label(6,i,listaTopDiezVinos[i-1][6]));
-                sheet.addCell(new Label(7,i,listaTopDiezVinos[i-1][7]));
+                sheet.addCell(new Label(0,i, reporte[i-1][0]));
+                sheet.addCell(new Label(1,i, reporte[i-1][1]));
+                sheet.addCell(new Label(2,i, reporte[i-1][2]));
+                sheet.addCell(new Label(3,i, reporte[i-1][3]));
+                sheet.addCell(new Label(4,i, reporte[i-1][4]));
+                sheet.addCell(new Label(5,i, reporte[i-1][5]));
+                sheet.addCell(new Label(6,i, reporte[i-1][6]));
+                sheet.addCell(new Label(7,i, reporte[i-1][7]));
             }
         }
 

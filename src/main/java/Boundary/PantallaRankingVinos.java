@@ -413,7 +413,10 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
     //METODOS CASO DE USO
 
     private void botonGenerarRankingBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGenerarRankingBtnActionPerformed
+        //Se habilita la pantalla para que el usuario pueda interactuar.
         habilitarPantalla();
+
+        //El Gestor inicia con la operación de generar el ranking.
         gestor.opGenerarRankingDeVinos(PantallaRankingVinos.this);
     }//GEN-LAST:event_botonGenerarRankingBtnActionPerformed
 
@@ -447,6 +450,7 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
     }
     
     public void solicitarFechaDesdeYHasta() {
+        //La pantalla setea las fechas desde y hasta.
         fechaDesdeLbl.setEnabled(true);
         dateChooseDesde.setEnabled(true);
         

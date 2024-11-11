@@ -100,7 +100,8 @@ public class Vino {
 
     //OTROS METODOS
 
-    public boolean tieneResena(LocalDate fechaDesde, LocalDate fechaHasta){
+    public boolean tieneResenaPremium(LocalDate fechaDesde, LocalDate fechaHasta){
+        //Se buscan todos los vinos del listado que tienen una reseña realizada por sommelier.
 
         resenasPremiumPeriodo = new ArrayList<>();
 
@@ -118,7 +119,7 @@ public class Vino {
     }
 
     public void calcularPromedioCalif(LocalDate fechaDesde, LocalDate fechaHasta){
-
+        //Se calcula el promedio de las calificaciones de las reseñas premium.
 
         double total = 0;
         for (Resena resena : resenasPremiumPeriodo) {
