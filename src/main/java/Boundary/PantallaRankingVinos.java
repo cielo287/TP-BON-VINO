@@ -3,6 +3,8 @@ package Boundary;
 
 
 import Control.GestorRankingVinos;
+import DataBase.PaisDAO;
+import DataBase.VinoDAO;
 import Entity.Pais;
 import Entity.Vino;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -237,7 +239,7 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelPrincipal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 827, Short.MAX_VALUE)
+            .addComponent(jPanelPrincipal)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -360,23 +362,28 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
 
                     ObjectMapper mapper = new ObjectMapper();
                     mapper.registerModule(new JavaTimeModule());
-                    String projectDir = System.getProperty("user.dir");
-                    String jsonVinos = projectDir + File.separator + "src/main/java/JSON/vinos.json";
-                    String jsonPaises = projectDir + File.separator + "src/main/java/JSON/paises.json";
                     InterfazExcel interfazExcel = new InterfazExcel();
+
                     List<Vino> listaVinos = null;
-                    List<Pais> listapaises = null;
+                    List<Pais> listaPaises = null;
+
+                    // Consultar los países desde la base de datos
+                    PaisDAO paisDAO = new PaisDAO();
+                    listaPaises = paisDAO.obtenerPaises();
+
+                    // Consultar los vinos desde la base de datos
+                    VinoDAO vinoDAO = new VinoDAO();
+                    listaVinos = vinoDAO.obtenerVinos();
+
+
                     try {
-                        listaVinos = mapper.readValue(new File(jsonVinos), new TypeReference<List<Vino>>() {});
-                        listapaises = mapper.readValue(new File(jsonPaises), new TypeReference<List<Pais>>() {});
-
-                        tomarConfPGReporte(listaVinos, listapaises, interfazExcel);
-
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                        tomarConfPGReporte(listaVinos, listaPaises, interfazExcel);
                     } catch (WriteException ex) {
                         throw new RuntimeException(ex);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
                     }
+
 
                 }
             }

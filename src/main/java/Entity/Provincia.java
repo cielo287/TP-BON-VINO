@@ -6,10 +6,29 @@ import java.util.List;
 public class Provincia {
 
     //ATRIBUTOS
+    private int id;
     private String nombre;
     private List<RegionVitivinicola> regionesVitivinicolas;
 
+    //CONSTRUCTOR
+
+    public Provincia(int id, String nombre, List<RegionVitivinicola> regionesVitivinicolas) {
+        this.id = id;
+        this.nombre = nombre;
+        this.regionesVitivinicolas = regionesVitivinicolas;
+    }
+
+
     //GETTERS Y SETTERS
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getNombre() {
         return nombre;
     }

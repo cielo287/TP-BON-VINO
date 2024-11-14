@@ -6,8 +6,17 @@ import java.util.List;
 public class RegionVitivinicola {
 
     //ATRIBUTOS
+
+    private int id;
     private String descripcion;
     private String nombre;
+
+    //CONSTRUCTOR
+    public RegionVitivinicola(int id, String descripcion, String nombre) {
+        this.id = id;
+        this.descripcion = descripcion;
+        this.nombre = nombre;
+    }
 
     //GETTERS Y SETTERS
 
