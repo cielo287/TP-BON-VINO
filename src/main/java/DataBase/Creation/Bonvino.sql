@@ -67,3 +67,18 @@ CREATE TABLE Resena (
         vino_id INT,
         FOREIGN KEY (vino_id) REFERENCES Vino(id)
 );
+
+
+-- Resultados de reporte
+SELECT v.nombre AS 'Nombre Vino', v.precio AS 'Precio Vino' ,
+AVG(r.puntaje) AS Calificacion, b.nombre AS 'Nombre Bodega',
+rv.nombre AS 'Nombre Región', pais.nombre AS 'Pais'
+FROM vino v
+JOIN resena r ON r.vino_id = v.id
+JOIN bodega b ON b.id = v.bodega_id
+JOIN regionvitivinicola rv ON rv.id = b.region_id
+JOIN provincia p ON p.id = rv.provincia_id
+JOIN pais pais ON pais.id = p.pais_id
+WHERE r.fechaResena BETWEEN '2024-11-01' AND '2024-11-14'
+GROUP BY v.id
+ORDER BY Calificacion DESC;

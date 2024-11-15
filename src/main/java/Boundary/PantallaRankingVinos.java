@@ -47,7 +47,11 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
     private javax.swing.JLabel fechaDesdeLbl;
     private javax.swing.JLabel fechaHastaLbl;
     private javax.swing.JLabel fechaHastaLbl2;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanelPrincipal;
     private javax.swing.JLabel lblBonVino;
     private javax.swing.JLabel lblTipoReseña;
@@ -80,26 +84,35 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
         botonGenerarRankingBtn = new javax.swing.JButton();
         lblBonVino = new javax.swing.JLabel();
         btnImportarActualizacionVinos1 = new javax.swing.JButton();
+        botonConfirmacionBtn = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
         fechaDesdeLbl = new javax.swing.JLabel();
+        dateChooseDesde = new com.toedter.calendar.JDateChooser();
         fechaHastaLbl = new javax.swing.JLabel();
-        fechaHastaLbl2 = new javax.swing.JLabel();
+        dateChooseHasta = new com.toedter.calendar.JDateChooser();
         lblTipoReseña = new javax.swing.JLabel();
         cmbTipoReseña = new javax.swing.JComboBox<>();
         lblTipoVisualizacion = new javax.swing.JLabel();
         cmbTipoVisualizacion = new javax.swing.JComboBox<>();
-        botonConfirmacionBtn = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        fechaHastaLbl2 = new javax.swing.JLabel();
         btnVolver = new javax.swing.JButton();
-        dateChooseDesde = new com.toedter.calendar.JDateChooser();
-        dateChooseHasta = new com.toedter.calendar.JDateChooser();
+        jPanel5 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1000, 608));
+        setResizable(false);
+        setSize(new java.awt.Dimension(1020, 600));
 
         jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanel1.setMaximumSize(new java.awt.Dimension(550, 400));
 
-        jPanelPrincipal.setBackground(new java.awt.Color(181, 12, 12));
-        jPanelPrincipal.setPreferredSize(new java.awt.Dimension(550, 400));
+        jPanelPrincipal.setBackground(new java.awt.Color(114, 0, 38));
+        jPanelPrincipal.setPreferredSize(new java.awt.Dimension(1060, 600));
 
+        botonGenerarRankingBtn.setBackground(new java.awt.Color(206, 66, 87));
+        botonGenerarRankingBtn.setForeground(new java.awt.Color(255, 255, 255));
         botonGenerarRankingBtn.setText("Generar Ranking de Vinos");
         botonGenerarRankingBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -112,19 +125,37 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
         lblBonVino.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblBonVino.setText("BON VINO");
 
+        btnImportarActualizacionVinos1.setBackground(new java.awt.Color(206, 66, 87));
+        btnImportarActualizacionVinos1.setForeground(new java.awt.Color(255, 255, 255));
         btnImportarActualizacionVinos1.setText("Importar actualización de vinos");
 
+        botonConfirmacionBtn.setBackground(new java.awt.Color(206, 66, 87));
+        botonConfirmacionBtn.setForeground(new java.awt.Color(255, 255, 255));
+        botonConfirmacionBtn.setText("Generar reporte");
+        botonConfirmacionBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonConfirmacionBtnActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/pexels-grape-things-2954924 (1).jpg"))); // NOI18N
+        jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+
+        jPanel2.setBackground(new java.awt.Color(206, 66, 87));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+
+        fechaDesdeLbl.setBackground(new java.awt.Color(0, 0, 0));
         fechaDesdeLbl.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
         fechaDesdeLbl.setForeground(new java.awt.Color(255, 255, 255));
         fechaDesdeLbl.setText("Ingresar fecha desde:");
+
+        dateChooseDesde.setDateFormatString("dd/MM/yyyy\n");
 
         fechaHastaLbl.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
         fechaHastaLbl.setForeground(new java.awt.Color(255, 255, 255));
         fechaHastaLbl.setText("Ingresar fecha hasta:");
 
-        fechaHastaLbl2.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        fechaHastaLbl2.setForeground(new java.awt.Color(255, 255, 255));
-        fechaHastaLbl2.setText("Generar ranking de los mejores vinos.");
+        dateChooseHasta.setDateFormatString("dd/MM/yyyy\n");
 
         lblTipoReseña.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
         lblTipoReseña.setForeground(new java.awt.Color(255, 255, 255));
@@ -143,12 +174,59 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
 
         cmbTipoVisualizacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Excel", "En Pantalla", "PDF" }));
 
-        botonConfirmacionBtn.setText("Generar reporte");
-        botonConfirmacionBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonConfirmacionBtnActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fechaHastaLbl)
+                            .addComponent(fechaDesdeLbl))
+                        .addGap(65, 65, 65)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dateChooseDesde, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(dateChooseHasta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblTipoReseña)
+                            .addComponent(lblTipoVisualizacion))
+                        .addGap(64, 64, 64)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbTipoVisualizacion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmbTipoReseña, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dateChooseDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fechaDesdeLbl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(fechaHastaLbl)
+                    .addComponent(dateChooseHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTipoReseña)
+                    .addComponent(cmbTipoReseña, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTipoVisualizacion)
+                    .addComponent(cmbTipoVisualizacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel3.setBackground(new java.awt.Color(114, 0, 38));
+
+        fechaHastaLbl2.setBackground(new java.awt.Color(255, 255, 255));
+        fechaHastaLbl2.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
+        fechaHastaLbl2.setForeground(new java.awt.Color(255, 255, 255));
+        fechaHastaLbl2.setText("Generar ranking de los mejores vinos.");
 
         btnVolver.setText("<");
         btnVolver.addActionListener(new java.awt.event.ActionListener() {
@@ -157,93 +235,94 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
             }
         });
 
-        dateChooseDesde.setDateFormatString("dd/MM/yyyy\n");
+        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel5.setPreferredSize(new java.awt.Dimension(0, 2));
 
-        dateChooseHasta.setDateFormatString("dd/MM/yyyy\n");
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 2, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnVolver)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(fechaHastaLbl2)
+                .addContainerGap())
+            .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1020, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(13, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnVolver)
+                    .addComponent(fechaHastaLbl2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         javax.swing.GroupLayout jPanelPrincipalLayout = new javax.swing.GroupLayout(jPanelPrincipal);
         jPanelPrincipal.setLayout(jPanelPrincipalLayout);
         jPanelPrincipalLayout.setHorizontalGroup(
             jPanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanelPrincipalLayout.createSequentialGroup()
-                .addGap(44, 44, 44)
+                .addGap(42, 42, 42)
                 .addComponent(botonGenerarRankingBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelPrincipalLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(fechaHastaLbl)
-                            .addComponent(fechaDesdeLbl)
-                            .addComponent(lblTipoReseña)
-                            .addComponent(lblTipoVisualizacion))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cmbTipoReseña, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmbTipoVisualizacion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(dateChooseDesde, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(dateChooseHasta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap(244, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPrincipalLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnImportarActualizacionVinos1)
-                        .addGap(43, 43, 43))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 547, Short.MAX_VALUE)
+                .addComponent(btnImportarActualizacionVinos1)
+                .addGap(41, 41, 41))
             .addGroup(jPanelPrincipalLayout.createSequentialGroup()
-                .addGap(276, 276, 276)
-                .addComponent(lblBonVino, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblBonVino, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPrincipalLayout.createSequentialGroup()
+            .addGroup(jPanelPrincipalLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(botonConfirmacionBtn)
-                .addGap(310, 310, 310))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPrincipalLayout.createSequentialGroup()
-                .addComponent(btnVolver)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(fechaHastaLbl2)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelPrincipalLayout.setVerticalGroup(
             jPanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPrincipalLayout.createSequentialGroup()
-                .addGroup(jPanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanelPrincipalLayout.createSequentialGroup()
-                        .addGroup(jPanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(fechaHastaLbl2)
-                            .addComponent(btnVolver))
-                        .addGap(10, 10, 10)
-                        .addComponent(lblBonVino, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(93, 93, 93)
-                        .addComponent(fechaDesdeLbl))
-                    .addComponent(dateChooseDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(19, 19, 19)
-                .addGroup(jPanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(fechaHastaLbl)
-                    .addComponent(dateChooseHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
-                .addGroup(jPanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTipoReseña)
-                    .addComponent(cmbTipoReseña, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25)
-                .addGroup(jPanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblTipoVisualizacion)
-                    .addComponent(cmbTipoVisualizacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46)
+                .addComponent(lblBonVino)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43)
                 .addComponent(botonConfirmacionBtn)
-                .addGap(108, 108, 108)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
                 .addGroup(jPanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonGenerarRankingBtn)
                     .addComponent(btnImportarActualizacionVinos1))
-                .addGap(24, 24, 24))
+                .addContainerGap(81, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelPrincipal)
+            .addComponent(jPanelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 1020, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 608, Short.MAX_VALUE)
+            .addComponent(jPanelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 889, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -260,19 +339,17 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
-
     private void cmbTipoReseñaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoReseñaActionPerformed
 
     }//GEN-LAST:event_cmbTipoReseñaActionPerformed
 
-    private void botonConfirmacionBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonConfirmacionBtnActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_botonConfirmacionBtnActionPerformed
-
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         ocultarCampos();
     }//GEN-LAST:event_btnVolverActionPerformed
+
+    private void botonConfirmacionBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonConfirmacionBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonConfirmacionBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -384,7 +461,6 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
                         throw new RuntimeException(ex);
                     }
 
-
                 }
             }
         });
@@ -413,8 +489,10 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
         cmbTipoVisualizacion.setVisible(false); 
         botonConfirmacionBtn.setVisible(false); 
         btnVolver.setVisible(false);
+        jPanel2.setVisible(false);
+        jPanel5.setVisible(false);
+        jLabel1.setVisible(true);
     }
-
 
 
     //METODOS CASO DE USO
@@ -442,13 +520,16 @@ public class PantallaRankingVinos extends javax.swing.JFrame {
         cmbTipoVisualizacion.setVisible(true); 
         botonConfirmacionBtn.setVisible(true);
         btnVolver.setVisible(true);
-        
+        jPanel2.setVisible(true);
+        jPanel5.setVisible(true);
+        jLabel1.setVisible(false);
+
        //inhabilitar interaccion 
         fechaDesdeLbl.setEnabled(false);
         dateChooseDesde.setEnabled(false);
         fechaHastaLbl.setEnabled(false);
         dateChooseHasta.setEnabled(false);
-        fechaHastaLbl2.setEnabled(false);
+        fechaHastaLbl2.setEnabled(true);
         lblTipoReseña.setEnabled(false);
         cmbTipoReseña.setEnabled(false);
         lblTipoVisualizacion.setEnabled(false);
